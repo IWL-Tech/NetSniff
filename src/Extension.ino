@@ -1,16 +1,3 @@
-/*
-  WiFiAccessPoint.ino creates a WiFi access point and provides a web server on it.
-
-  Steps:
-  1. Connect to the access point "yourAp"
-  2. Point your web browser to http://192.168.4.1/H to turn the LED on or http://192.168.4.1/L to turn it off
-     OR
-     Run raw TCP "GET /H" and "GET /L" on PuTTY terminal with 192.168.4.1 as IP address and 80 as port
-
-  Created for arduino-esp32 on 04 July, 2018
-  by Elochukwu Ifediora (fedy0)
-*/
-
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WiFiAP.h>
@@ -62,55 +49,7 @@ void loop() {
             client.println("Content-type:text/html");
             client.println();
 
-            Serial.println("scan start");
-
-            String message = "<h1>Scan result: ";
-            client.print("<h1>Scan result: ");
-          
-            // WiFi.scanNetworks will return the number of networks found
-            int n = WiFi.scanNetworks();
-            Serial.println("scan done");
-            if (n == 0) {
-                Serial.println("no networks found");
-                message += " No networks found</h1>";
-                client.println(" No networks found</h1>");
-            } else {
-                Serial.print(n);
-                client.print(n);
-                message += n;
-                Serial.println(" networks found");
-                client.println(" networks found</h1><br />");
-                message += " networks found</h1><br />";
-                for (int i = 0; i < n; ++i) {
-                    // Print SSID and RSSI for each network found
-                    Serial.print(i + 1);
-                    client.print(i + 1);
-                    message += i+1;
-                    Serial.print(": ");
-                    client.print(": ");
-                    message += ": ";
-                    Serial.print(WiFi.SSID(i));
-                    client.print(WiFi.SSID(i));
-                    message += WiFi.SSID(i);
-                    Serial.print(" (");
-                    client.print(" (");
-                    message += " (";
-                    Serial.print(WiFi.RSSI(i));
-                    client.print(WiFi.RSSI(i));
-                    message += WiFi.RSSI(i);
-                    Serial.print(")");
-                    client.print(")");
-                    message += ")";
-                    Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-                    client.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-                    message += (WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*";
-                    delay(10);
-                    message += "<br />";
-                    client.print("<br />");
-                }
-            }
-            Serial.println("SCAN END");
-            Serial.println("");
+            client.print("<h1>Nominal systems</h1>");
 
             // the content of the HTTP response follows the header:
             client.print(" ");
@@ -125,8 +64,6 @@ void loop() {
         } else if (c != '\r') {  // if you got anything else but a carriage return character,
           currentLine += c;      // add it to the end of the currentLine
         }
-
-        // Check to see if the client request was "GET /H" or "GET /L":
       }
     }
     // close the connection:
