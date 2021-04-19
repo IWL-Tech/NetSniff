@@ -2,6 +2,8 @@
 #include <WiFiClient.h>
 #include <WiFiAP.h>
 
+#define LED_BUILTIN 2   // Set the GPIO pin where you connected your test LED or comment this line out if your dev board has a built-in LED
+
 // Set these to your desired credentials.
 const char *ssid = "IWL-S1";
 const char *password = "itwithlyam";
@@ -67,6 +69,7 @@ void loop() {
                 client.println(" networks found</h1><br />");
                 message += " networks found</h1><br />";
                 for (int i = 0; i < n; ++i) {
+                  if (WiFi.SSID(i).startsWith("IWL-B")) {
                     // Print SSID and RSSI for each network found
                     Serial.print(i + 1);
                     client.print(i + 1);
@@ -86,13 +89,14 @@ void loop() {
                     Serial.print(")");
                     client.print(")");
                     message += ")";
-                    Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-                    client.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
-                    message += (WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*";
                     delay(10);
                     message += "<br />";
                     client.print("<br />");
+                  } else {
+                    break;
+                  }
                 }
+                client.print("<h3>Scan complete.</h3><h4>If no boards were listed, then check that your boards are connected to power.</h4>");
             }
             Serial.println("SCAN END");
             Serial.println("");
@@ -111,6 +115,7 @@ void loop() {
           currentLine += c;      // add it to the end of the currentLine
         }
 
+        // Check to see if the client request was "GET /H" or "GET /L":
       }
     }
     // close the connection:
